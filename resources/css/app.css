@@ -11,12 +11,27 @@
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: Poppins, ui-sans-serif, system-ui, sans-serif; }
+:root {
+  --brand-green: #103e3f;
+  --brand-gold: #edd6a7;
+  --brand-gold-soft: #f7ecd2;
+}
+body {
+  font-family: Poppins, ui-sans-serif, system-ui, sans-serif;
+  color: var(--brand-green);
+}
 .font-display { font-family: "Playfair Display", ui-serif, Georgia, serif; }
 .luxe-ambient {
   background:
-    radial-gradient(1200px 700px at 20% 0%, rgba(210, 170, 130, 0.35) 0%, rgba(255,255,255,0) 60%),
-    linear-gradient(180deg, #fbf6ef 0%, #f2e5d4 100%);
+    radial-gradient(1200px 700px at 20% 0%, rgba(237, 214, 167, 0.55) 0%, rgba(255,255,255,0) 60%),
+    linear-gradient(180deg, #fff9ef 0%, var(--brand-gold-soft) 100%);
 }
-.glass { border: 1px solid rgba(231,229,228,.75); background: rgba(255,255,255,.72); box-shadow: 0 20px 50px rgba(60,30,20,.1); backdrop-filter: blur(8px); }
+.glass { border: 1px solid rgba(16, 62, 63, 0.15); background: rgba(255,255,255,.78); box-shadow: 0 20px 50px rgba(16, 62, 63, 0.12); backdrop-filter: blur(8px); }
+
+/* Brand overrides for commonly used utility classes in templates */
+.bg-stone-900 { background-color: var(--brand-green) !important; }
+.text-amber-50 { color: var(--brand-gold) !important; }
+.text-stone-900 { color: var(--brand-green) !important; }
+[class*="border-stone-200"] { border-color: rgba(16, 62, 63, 0.2) !important; }
+[class*="border-stone-300"] { border-color: rgba(16, 62, 63, 0.28) !important; }
 [x-cloak]{ display:none!important; }

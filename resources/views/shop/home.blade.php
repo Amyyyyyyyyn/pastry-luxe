@@ -6,14 +6,19 @@
     <h1 class="font-display text-5xl font-semibold leading-tight">The Taste of Home-Baked Goodness</h1>
     <p class="mt-4 text-stone-600">High-end pastries with premium ingredients and elegant presentation.</p>
     <div class="mt-6 flex gap-3">
-      <a class="rounded-2xl bg-stone-900 px-5 py-3 text-sm font-semibold text-amber-50" href="{{ route('shop.products') }}">Order Now</a>
+      <a class="rounded-2xl px-5 py-3 text-sm font-semibold" style="background:#103e3f;color:#edd6a7;" href="{{ route('shop.products') }}">Order Now</a>
       <a class="rounded-2xl border bg-white/70 px-5 py-3 text-sm font-semibold" href="#products">View Menu</a>
     </div>
   </div>
   <div class="overflow-hidden rounded-[2rem] border border-stone-200/70 bg-white/70 shadow-xl">
     @php
-      $heroImg = $heroProduct?->image;
-      $heroSrc = $heroImg ? (str_starts_with($heroImg, 'http') ? $heroImg : asset('storage/'.ltrim($heroImg, '/'))) : 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1300&q=80';
+      $uploadedHeroPath = "C:\\Users\\dhaou\\.cursor\\projects\\c-Users-dhaou-OneDrive-Ministere-de-l-Enseignement-Superieur-et-de-la-Recherche-Scientifique-Desktop-PROJECTS-pastry-luxe\\assets\\c__Users_dhaou_AppData_Roaming_Cursor_User_workspaceStorage_b729cd9f0d77f351a36a722a1553fc2d_images_Untitled_design-e4c25d58-aed1-42ac-8dcf-0829890a1049.png";
+      if (is_file($uploadedHeroPath)) {
+        $heroSrc = 'data:image/png;base64,'.base64_encode((string) file_get_contents($uploadedHeroPath));
+      } else {
+        $heroImg = $heroProduct?->image;
+        $heroSrc = $heroImg ? (str_starts_with($heroImg, 'http') ? $heroImg : asset('storage/'.ltrim($heroImg, '/'))) : 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1300&q=80';
+      }
     @endphp
     <img src="{{ $heroSrc }}" class="h-[26rem] w-full object-cover" alt="Featured cake">
   </div>
