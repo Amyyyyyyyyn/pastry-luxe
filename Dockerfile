@@ -22,7 +22,7 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Install Node + build assets
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+RUN  curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && npm install \
     && npm run build
