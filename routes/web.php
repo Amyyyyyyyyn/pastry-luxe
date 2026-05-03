@@ -7,6 +7,26 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 
+/*
+| Browsers request /favicon.ico by default. Without a real file, many show a generic tab
+| icon even if <link rel="icon"> is set. Serve the same assets as the layout favicon chain.
+*/
+Route::get('/favicon.ico', function () {
+    $usable = static fn (string $path): bool => is_file($path) && filesize($path) > 0;
+    $candidates = [
+        [public_path('favicon.ico'), 'image/x-icon'],
+        [public_path('favicon.png'), 'image/png'],
+        [public_path('brand-logo.png'), 'image/png'],
+        [public_path('favicon.svg'), 'image/svg+xml'],
+    ];
+    foreach ($candidates as [$path, $mime]) {
+        if ($usable($path)) {
+            return response()->file($path, ['Content-Type' => $mime]);
+        }
+    }
+    abort(404);
+});
+
 Route::get('/', [ShopController::class, 'home'])->name('home');
 Route::get('/catalogue', [ShopController::class, 'products'])->name('shop.products');
 Route::get('/produit/{product:slug}', [ShopController::class, 'show'])->name('shop.product.show');

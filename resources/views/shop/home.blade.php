@@ -1,7 +1,7 @@
 @extends('layouts.shop')
 @section('title', config('app.name'))
 @section('content')
-<section class="mx-auto grid max-w-7xl items-center gap-8 px-4 pt-12 lg:grid-cols-2">
+<section class="shop-hero mx-auto max-w-7xl items-center gap-8 px-4 pt-12 lg:grid-cols-2">
   <div>
     <h1 class="font-display text-5xl font-semibold leading-tight">The Taste of Home-Baked Goodness</h1>
     <p class="mt-4 text-stone-600">High-end pastries with premium ingredients and elegant presentation.</p>
@@ -10,42 +10,67 @@
       <a class="rounded-2xl border bg-white/70 px-5 py-3 text-sm font-semibold" href="#products">View Menu</a>
     </div>
   </div>
-  <div class="overflow-hidden rounded-[2rem] border border-stone-200/70 bg-white/70 shadow-xl">
+  <div class="flex items-center justify-center">
     @php
-      $uploadedHeroPath = "C:\\Users\\dhaou\\.cursor\\projects\\c-Users-dhaou-OneDrive-Ministere-de-l-Enseignement-Superieur-et-de-la-Recherche-Scientifique-Desktop-PROJECTS-pastry-luxe\\assets\\c__Users_dhaou_AppData_Roaming_Cursor_User_workspaceStorage_b729cd9f0d77f351a36a722a1553fc2d_images_Untitled_design-e4c25d58-aed1-42ac-8dcf-0829890a1049.png";
-      if (is_file($uploadedHeroPath)) {
-        $heroSrc = 'data:image/png;base64,'.base64_encode((string) file_get_contents($uploadedHeroPath));
+      $usable = static fn (string $path): bool => is_file($path) && filesize($path) > 0;
+
+      $brandPath = public_path('Caramella-Sweets.png');
+
+      if ($usable($brandPath)) {
+        $heroSrc = '/Caramella-Sweets.png?v=' . filemtime($brandPath);
+        $heroImgClass = 'h-[30rem] w-full max-h-[30rem] object-contain object-center p-4 sm:p-6';
       } else {
         $heroImg = $heroProduct?->image;
-        $heroSrc = $heroImg ? (str_starts_with($heroImg, 'http') ? $heroImg : asset('storage/'.ltrim($heroImg, '/'))) : 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1300&q=80';
+
+        $heroSrc = $heroImg
+          ? (str_starts_with($heroImg, 'http')
+              ? $heroImg
+              : asset('storage/' . ltrim($heroImg, '/')))
+          : 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1300&q=80';
+
+        $heroImgClass = 'h-[30rem] w-full object-cover object-center';
       }
     @endphp
-    <img src="{{ $heroSrc }}" class="h-[26rem] w-full object-cover" alt="Featured cake">
+
+    <img 
+      src="{{ $heroSrc }}" 
+      class="{{ $heroImgClass }} rounded-3xl "
+      alt="{{ config('app.name') }}"
+      width="520" 
+      height="416"
+    >
   </div>
 </section>
 
-<section class="mx-auto mt-16 max-w-7xl px-4">
-  <div class="grid gap-4 sm:grid-cols-3">
+<section class="shop-section mx-auto mt-16 max-w-7xl px-4">
+  <div class="shop-card-grid shop-card-grid--3 gap-4 sm:grid-cols-3">
     <div class="glass rounded-3xl p-6"><div class="text-2xl">🌿</div><h3 class="mt-2 font-display text-xl">Fresh products</h3></div>
     <div class="glass rounded-3xl p-6"><div class="text-2xl">🍫</div><h3 class="mt-2 font-display text-xl">Premium ingredients</h3></div>
     <div class="glass rounded-3xl p-6"><div class="text-2xl">💖</div><h3 class="mt-2 font-display text-xl">Made with Love</h3></div>
   </div>
 </section>
 
-<section id="categories" class="mx-auto mt-16 max-w-7xl px-4">
+<section id="categories" class="shop-section mx-auto mt-16 max-w-7xl px-4">
   <h2 class="font-display text-3xl">Categories</h2>
-  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  @if($categories->isEmpty())
+    <p class="mt-4 rounded-2xl border border-stone-300 bg-white/80 p-4 text-stone-600">No categories yet. Run <code class="rounded bg-stone-100 px-1">php artisan migrate --seed</code> or add categories in the admin panel.</p>
+  @else
+  <div class="shop-cat-grid mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     @foreach($categories as $c)
       <a class="group rounded-3xl border bg-white/70 p-5 transition hover:-translate-y-1" href="{{ route('shop.products',['categorie'=>$c->slug]) }}">
         <h3 class="font-display text-xl">{{ $c->name }}</h3><p class="mt-2 text-sm text-stone-600">{{ $c->excerpt }}</p>
       </a>
     @endforeach
   </div>
+  @endif
 </section>
 
-<section id="products" class="mx-auto mt-16 max-w-7xl px-4">
+<section id="products" class="shop-section mx-auto mt-16 max-w-7xl px-4">
   <h2 class="font-display text-3xl">Products</h2>
-  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  @if($products->isEmpty())
+    <p class="mt-4 rounded-2xl border border-stone-300 bg-white/80 p-4 text-stone-600">No products yet. Seed the database or add products in admin.</p>
+  @else
+  <div class="shop-prod-grid mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     @foreach($products as $p)
       @php
         $img = $p->image;
@@ -63,5 +88,6 @@
       </article>
     @endforeach
   </div>
+  @endif
 </section>
 @endsection
