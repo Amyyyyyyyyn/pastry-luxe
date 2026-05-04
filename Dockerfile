@@ -10,7 +10,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan config:cache
 WORKDIR /var/www
 
 # Copy project
